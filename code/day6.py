@@ -7,7 +7,7 @@ Look through the print and look for the first element that havent changed much.
 '''
 def create_map(dic) :
     world_map = dict()
-    a = [ (i, j) for i in range(-500,1000) for j in range(-500, 1000)]
+    a = [ (i, j) for i in range(-20,50) for j in range(-20, 50)]
     for i in a :
         temp = 100000
         for key, value in dic.items() :
@@ -21,6 +21,22 @@ def create_map(dic) :
     print(new_dic)
 
 
+''' Part b method to solve the size of area '''
+def count_area(dic) :
+    a = [(i, j) for i in range(0,350) for j in range(0, 350)]
+    count = 0
+    for i in a :
+        limit = 10000
+        length = 0
+        for value in dic.values() :
+            length += count_distance(i, value)
+        if length < limit :
+            count += 1
+    return count
+
+
+
+
 def count_distance(t1, t2) :
     dist = abs(t1[0] - t2[0]) + abs(t1[1] - t2[1])
     return dist
@@ -32,4 +48,4 @@ with open("../inputs/day6.txt", "r") as f :
         x, y = line.replace("\n", "").split(",")
         dic[i] = (int(x),int(y))
     create_map(dic)
-
+    print(count_area(dic))

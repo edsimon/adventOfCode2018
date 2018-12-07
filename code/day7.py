@@ -1,11 +1,76 @@
 import string
+number_of_workers = 5
+add_to_time = 60
 
+'''############# Class ############'''
+# Create a class worker to remove code duplication
+class Worker:
+    not_buzy = True
+    time_to_work = 0
+    element = "."
+
+    def take_work(self, time, moves):
+        if self.not_buzy and len(moves) > 0:
+            self.element = min(moves)
+            moves.remove(self.element)
+            self.not_buzy = False
+            self.time_to_work = time + val[self.element] - 1 + add_to_time
+
+    def finish_work(self, time, moves, taken_moves, elements):
+        if self.time_to_work <= time and not self.not_buzy:
+            take_move(dic, self.element, moves, taken_moves)
+            for e in elements :
+                if e in moves : moves.remove(e)
+            self.not_buzy = True
+
+
+############# Main Loop ###############
+# This is main loop
+def loop(dic) :
+    taken_moves, workers, moves, time = [], [], set(), 0
+    moves = build_moves(dic, moves)
+    for i in range(number_of_workers):
+        workers.append(Worker())
+    while True:
+        elements = []
+
+        for worker in workers :
+            worker.take_work(time, moves)
+            elements.append(worker.element)
+
+        for worker in workers :
+            worker.finish_work(time, moves, taken_moves, elements)
+            if worker.not_buzy :
+                worker.element = "."
+
+        pretty_print(time, elements, moves)
+
+        # Basecase for when we are finished
+        if ["."]*number_of_workers == elements :
+            return "".join(taken_moves), time
+        time += 1
+
+
+############ Helper Functions #############
+# Just prints the workprocess in a nice way
+def pretty_print(time, elements, moves) :
+    if len(moves) == 0: temp = ""
+    else: temp = moves
+    if time >= 100 : space = " "
+    else : space = "\t "
+    print(time, space, *elements, "  new:", *temp)
+
+
+# Create a dict with char as key and value is what number the letter is
 def get_char_value() :
     values = dict()
     for index, letter in enumerate(string.ascii_uppercase):
         values[letter] = index + 1
     return values
 
+
+#Builds the dict in creation and updating the main dictionay
+# that contains all possible relations
 def build_moves(dic, moves) :
     l = set()
     for value in dic.values():
@@ -17,103 +82,7 @@ def build_moves(dic, moves) :
     return moves
 
 
-def loop(dic) :
-    print("T","A","B")
-    w1, w2, w3, w4, w5 = True, True, True, True, True,
-    w1_time, w2_time, w3_time, w4_time, w5_time = 0, 0, 0, 0, 0
-    w1_elem, w2_elem, w3_elem, w4_elem, w5_elem = "", "", "", "", ""
-    taken_moves = []
-    moves, time = set(), 0
-    moves = build_moves(dic, moves)
-    while True:
-        # for debugging
-        if time == 0 :
-            str = ""
-
-
-        if w5 :
-            w5_elem = "."
-        if w4 :
-            w4_elem = "."
-        if w3 :
-            w3_elem = "."
-        if w2 :
-            w2_elem = "."
-        if w1 :
-            w1_elem = "."
-
-
-
-        if w1 and len(moves) > 0:
-            w1_elem = min(moves)
-            moves.remove(w1_elem)
-            w1 = False
-            w1_time = time + val[w1_elem] - 1 + 60
-
-        if w2 and len(moves) > 0:
-            w2_elem = min(moves)
-            moves.remove(w2_elem)
-            w2 = False
-            w2_time = time + val[w2_elem] - 1 + 60
-
-        if w3 and len(moves) > 0:
-            w3_elem = min(moves)
-            moves.remove(w3_elem)
-            w3 = False
-            w3_time = time + val[w3_elem] - 1 + 60
-
-        if w4 and len(moves) > 0:
-            w4_elem = min(moves)
-            moves.remove(w4_elem)
-            w4 = False
-            w4_time = time + val[w4_elem] - 1 + 60
-
-        if w5 and len(moves) > 0:
-            w5_elem = min(moves)
-            moves.remove(w5_elem)
-            w5 = False
-            w5_time = time + val[w5_elem] - 1 + 60
-
-        elements = [w1_elem,w2_elem,w3_elem,w4_elem,w5_elem]
-
-        if w1_time <= time and not w1:
-            take_move(dic, w1_elem, moves, taken_moves)
-            for e in elements :
-                if e in moves : moves.remove(e)
-            w1 = True
-
-        if w2_time <= time and not w2:
-            take_move(dic, w2_elem, moves, taken_moves)
-            for e in elements :
-                if e in moves : moves.remove(e)
-            w2 = True
-        if w3_time <= time and not w3:
-            take_move(dic, w3_elem, moves, taken_moves)
-            for e in elements :
-                if e in moves : moves.remove(e)
-            w3 = True
-        if w4_time <= time and not w4:
-            take_move(dic, w4_elem, moves, taken_moves)
-            for e in elements :
-                if e in moves : moves.remove(e)
-            w4 = True
-        if w5_time <= time and not w5:
-            take_move(dic, w5_elem, moves, taken_moves)
-            for e in elements :
-                if e in moves : moves.remove(e)
-            w5 = True
-
-
-
-        print(time, "\t", w1_elem, w2_elem, w3_elem, w4_elem, w5_elem,  "  New Moves: ", moves)
-        time += 1
-        if len(moves) == 0 and w1 and w2 and w3 and w4 and w5:
-            break
-    return "".join(taken_moves)
-
-
-
-
+# takes a move and then update the dict
 def take_move(dic, mo, moves, taken_moves) :
     taken_moves.append(mo)
     temp = set()
@@ -125,15 +94,14 @@ def take_move(dic, mo, moves, taken_moves) :
         moves.clear()
         if len(temp) > 0 :
             moves.add(temp[0])
-#    print(dic)
 
 
+# Sort the information to appear in right form
 def sort_info() :
     my_dict = {}
     for line in f :
         data = line.split(" ")
-        finished = data[1]
-        begin = data[7]
+        begin, finished = data[7], data[1]
         if finished in my_dict.keys() :
             my_dict[finished].append(begin)
         else :
@@ -141,10 +109,11 @@ def sort_info() :
     return my_dict
 
 
+# Open the file and starts the computing
 with open("../inputs/day7.txt", "r") as f :
     dic = sort_info()
     val = get_char_value()
-    temp = loop(dic)
-    print("The path taken is \'{}\'"
-          .format(temp))
+    str, time = loop(dic)
+    print("The path taken is \'{}\' and the time for it to take is {}"
+          .format(str, time))
 

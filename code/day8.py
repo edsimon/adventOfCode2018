@@ -1,4 +1,4 @@
-''' Parsing the tree to the right format needed for the task '''
+''' Parsing the tree to the right format needed for the task  '''
 def parse_tree(tree):
     n_children = tree.pop(0)
     n_meta = tree.pop(0)
